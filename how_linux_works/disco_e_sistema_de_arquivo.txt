@@ -1,0 +1,422 @@
+O esquema de disco no Linux é o seguinte:
+
+	-----------------------------------------------------
+	| ------------------------------------------------  |
+	| |      Tabela de Partição                      |  |
+	| ------------------------------------------------  |
+        |             |                          |          | 
+        |             V                          V          |
+	| ------------------------------  ----------------  |
+	| | Partição                   |  | Partição     |  |
+	| | -------------------------- |  |              |  |
+	| | | ---------------------- | |  |              |  |
+        | | | | Sistema de arquivo | | |  |              |  |
+	| | | | Estruturas de dados| | |  |              |  |
+	| | | ---------------------- | |  |              |  |
+        | | |            |           | |  |              |  |
+        | | |            V           | |  |              |  |
+        | | | ---------------------- | |  |              |  |
+	| | | | Arquivo Dado       | | |  |              |  |
+	| | | |                    | | |  |              |  |
+        | | | |                    | | |  |              |  |
+	| | | |                    | | |  |              |  |
+	| | | |                    | | |  |              |  |
+	| | | |                    | | |  |              |  |
+        | | | ---------------------- | |  |              |  |
+	| |  ------------------------- |  |              |  |
+	| ------------------------------  ----------------  |
+	-----------------------------------------------------
+
+No linux as partições são subdivisões do disco e elas são identificadas com números depois do nome do bloco. Exemplo /dev/sda1 e /dev/sda2.
+
++-------------------------------------+
+| Particionando Dispositivos de Disco |
++-------------------------------------+
+
++ As ferramentas de particionamento do linux são:
+	
+parted => Uma ferramenta de terminal que suporta MBR e GPT
+
+gparted => Versão gráfica do parted
+
+fdisk => A ferramenta tradional de particionamento de disco do linux. Não suporta o GPT.
+
+gdisk => A versão do fdisk que suporta o GPT, mas não o MBR.
+
+Nos dispositivos que são utilizados MBR podem existir partições lógicas e extendidas, geralmente queresmos acessar somente as lógicas
+
++ Mudando as Tabelas de Partições 
+
+ - Ver partições de disco é simples e não causa nenhum problema. 
+
+ - Alterar partições de disco é simples, mas pode gerar problemas. Siga essas regras a seguir:
+
+	> Mudar a tabela de partição torna bem um pouco difícil a recuperaoão de arquivos, por que muda o ponto inicial de referência do sistema de arquivo.
+
+	> Garatir que nenhuma partição da lista de alvos esteja em uso.
+
++-------------------+
+|Sistema de Arquivo |
++-------------------+
+
+O sistema de arquivo é a última coisa entre o kernel e o espaço do usuário, funciona como uma base de dados que o usuário executa os comando como o ls e o cd. É uma estrutura que transforma dispositivos de bloco em uma sofisticada estrutura hierarquia de arquibos e subdiretórios.  
+
+O sistema de arquivo é muito versátil por isso ele performa várias tarefas que podemos ver no /sys e /proc
+
+FUSE => O sistema de arquivo no espaço do usuário
+
+VFS => A abstração de camadas do Sistema de Arquivo Virtual completa a implementação do sistema de arquivo. 
+
+    => VFS garante que todos as implementações de sistemas de arquivo suportem suportem as interfaces padrões para que as aplicações do espaço do usuário consigam acessar arquivos e diretórios da mesma maneira. 
+
+    => O VFS permite olinux suportar uma quantidade grande de sistemas de arquivo.
+
++ Tipos de Sistema de Arquivo:
+
+------
+|EXT4|
+------ 
+	=> O Fourth Extended Filesystem (ext4) é a versão atual de uma linha de sistemas de arquivos nativos do linux. O ext4 é um sistema de arquivo melhorado que suporta ext2, ext3 e um grande número de subdiretórios.
+
+	=> O Second Extended Filesystem (ext2) foi por muito tempo usado no linux, foi inspirado pelo sistema de arquivo tradicional do UNIX o Unix File System (UFS) e pelo Fast File System (FFS). 
+
+	=> O Third Extended Filesystem (ext3) adicionou um recurso de diário (um pequeno cache fora do sistema de arquivo normal) para melhorar a integridade dos dados e acelerar a incialização.
+
+---------
+|iso9660|
+---------
+
+	=> ISO 9660 (iso9660) é uma CD-ROM padrão. A maioria das CD-ROMs usa alguma variação da ISO 9660 padrão.
+
+---------------------
+|msdos, vfat, umsdos|
+---------------------
+
+	=> Os sistemas de arquivo FAT (msdos, vfat, umsdos) pertencem a Microsoft. O tipo msdos simples suporta a variação primitiva nos sistemas MS-DOS.
+
+	=> O vfat é utilizado em modernos sistemas de arquivos Windows para obter acesso total do linux.
+
+	=> O umsdos é peculiar para o linux.
+
+---------
+|hfsplus|
+---------
+
+	=> HFS+ (hfsplus) é usado nos sistemas apple.
+
++---------------------------+
+|Criando Sistemas de Arquivo|
++---------------------------+
+
+A criação de sistema de arquivo é feita diretamente do espaço do usuário, pois o processo criado pode manipular um dispositivo de bloco.
+
+O comando usado para criar sistemas de arquivos nos discos é o mkfs, o qual passamos o parâmetro, depois o tipo de sistema de arquivo e em seguida o disco que o sistema de arquivo deve ser criado.
+
+Exemplo do comando mkfs:
+	
+	mkfs -t ext4 /dev/sdf2
+
+Quando se cria um sistema de arquivo o mkfs imprime a saída do diagnostico enquanto funciona, inclunindo a saída referente ao super bloco. 
+
+O super bloco é um componente chave o base da dados do sistema de arquivo, é tão importante que o mkfs cria backups para caso o original seja destruido.
+
+ 
++ Montando Sistemas de Arquivos 
+
+O processo de anexar um sistema de arquivo é chamado de montagem. Quando o sistema inicia, o kernel lê algumas configurações e monta o root (/).
+
+Para montar um sistema de arquivo é preciso saber o seguinte:
+	
+	+ O dispositivo de sistema de arquivo (Como um partição de disco, onde o os dados do sistema de arquivo reside)
+
+	+ O tipo do sistema de arquivo 
+
+	+ O ponto de montagem. O ponto de montagem é o local onde o hierarquia do sistema de arquivo será anexada. O ponto de montagem é sempre um diretório norma.
+
+Para montar um sistema de arquivo precisa-se passar o comando mount com o tipo de arquivo a ser montado, o dispositivo que vai ser montado e o local de montagem do dispositivo.
+
+Exemplo:
+	mount -t ext4 /dev/sdf2 /home/extra
+
++ Identificador Único Universal do Sistema de Arquivo (UUID):
+
+O nome dos dispositivos são aleatórios, pois são baseados a partir do momento da identificação deles pelo kernel. Para resolver esse problema usa-se o UUID para identificar os sistemas de arquivo. Quando o mke2fs inicia um novo sistema de arquivo ele também gera um número de série. Para ver os UUIDs usamos o comando blkid.
+ 
++ Bufferização em Disco, Cache e Sistema de Arquivo:
+
+O buffer do linux que escreve as alterações no disco. Isso significa que o kernel não escreve as mudanças de forma imediata quando o processo requisita uma mudança no sistema de arquivo. Ivés o kernel armazena na memória RAM até o mesmo fazer a alteração no disco. Esse sistema torna o processo mais performatico.
+
+Quando o disco é desmontado o kernel sicroniza com disco, caso não seja possível desmontar o disco o comando sync soluciona o problema. 
+
+O kernel tem vários mecanismos que fazem com o que a RAM faça o cahe de alguns blocos automaticamentes. Portanto se um processo precisa acessar um arquivo várias vezes o kernel não precisa ir no disco.
+
+
++ Opções de montagem do Sistema de Arquivo: 
+
+Opções Curtas:
+	
+	-r => A opção -r monta o sistema de arquivo no modo somente leitura. Isso server principal para proteções de escrita.
+
+	-n => A opção -n garante que o mount não tente atualizar o sistema o bando de dados da montagem de tempo de execução, /etc/mtab. A operação de montagem falha quando não pode escrever no arquiv, o que é importante porque a partição root e o sistema de montagem são apenas leitura no começo. Essa opção é viável para resolver um problema do sistema no modo de usuário único, por que o banco de dados do sistema de montagem pode estar indisponível no momento.
+
+	-t => A opção -t serve para especificar o tipo de sistema de arquivo.
+
+Opções Longas:
+
+As opções curtas são muito limitadas para um número grande de opções de montagem. As opções curtas também são pouco descritivas, pois é difícil basear a sua função em uma única letra. Para usar opções longas dese-se passar o parâmetro -o e em seguida digitar as opções longas.
+
+Exemplo:
+	mount -t vfat /dev/hda1 /dos -o ro,conv=auto
+
+As opções longas mais usadas são:
+
+	exec, noexec => Habilita ou desabilita a execução de programas no sistema de arquivo.
+
+	suid, nosuid => Habilita ou desabilita programas setuid
+
+	ro => Monta o sistema de arquivo no modo de somente leitura
+
+	rw => Monta o sistema de arquivo no modo de leitura e escrita
+
+	conv=rule => (Baseado no sistema de arquivo FAT) Converte caracteres de nova linha em arquivos baseados na rule, que pode ser binary, text, ou auto. A opção padrão é binary, o que desabilita qualquer tradução. Para tratar todos os arquivos como texto usa-se a opção text. A opção auto converte para a extenção do arquivo. Considere usar somente no modo apenas leitura
+
++ Remontando um sistema de arquivo:
+
+Haverá momentos em que será necessário reanexar um sistema de arquivo já montado ao mesmo ponto de montagem quando precisar alterar alguma opção de montagem. A ocorrência mais comum é quando você precisa fazer um sistema apenas leitura se tornar leitura e escrita.
+
+Para fazer isso usa-se o comando a seguir:
+
+	mount -n -o remount / 
+
+OBS: A opção -n foi passada pois como o / pertence ao root não é possível alterar isso na base de dados do sistema de montagem. Só root pode escrever no root.
+
++ A tabela de sistema de arquivo do /etc/fstab
+
+O /etc/fstab é um arquivo de configuração que server para evitar o trabalho de montar os discos e suas partições.
+
+A seguir o fstab do meu computador:
+
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda2 during curtin installation
+/dev/disk/by-uuid/60095230-53b6-41e4-a9a4-33faff9a2daa / ext4 defaults 0 1
+# /boot/efi was on /dev/sda1 during curtin installation
+/dev/disk/by-uuid/9428-1967 /boot/efi vfat defaults 0 1
+/swap.img	none	swap	sw	0	0
+
+Cada linha corresponde a um dispositivo com um sistema de arquivo que são divididos em seis campos.
+
+O Dispositivo ou UUID => A maioria dos sistemas linux usam o UUID no fstab.
+
+O ponto de montagem => Indica onde anexar o sistema de arquivo
+
+O tipo do sistema de arquivo => Ficam os tipos de arquivo
+
+Opções => Usam opções longas separadas por vírgulas
+
+Backup de informações do usuário => Usar sempre 0 nesse campo
+
+Teste de ordem de integridade do sistema de arquivo => Para garantir que o fsck execute primeiro no root, sempre coloca-se 1 na opção do sistema de arquivo do root e 2 para outros sistemas de arquivo. Usa-se o 0 para desabilitar qualquer checagem para qualquer outra coisa. 
+         
+Dentro do fstab existem opções que não se aplicam fora dele, as opções seguem:
+
+defaults => Usado quando não se quer nada em especifíco, mas quer que todas as funções sejam feitas como, modo leitura-escrita, habilitar dispositivos de arquivo, executaveis e entre outros.
+
+errors => Serve para identificar um erro durante a montagem, podemos passar o parâmetro errors=continue para que continue rodando e retorne um código de erro. Para ter o kernel tente montar de novo no modo leitura, usa-se o errors=remout-ro. A opção errors=panic diz ao kernel para parar quando se encontra um problema na montagem.
+
+noauto => Essa opção diz para o comando mount -a para ignorar a entrada. Usado para prevenir a montagem de dispositivos removiveis.
+
+user => Essa opção permite que usuários sem privilégio executem a montagem de dispositivos. Útil para mídias removiveis.
+
+
++ Capacidade do Sistema de Arquivo:
+
+Para ver a capacidade do sistema de arquivo é só usar o comando df
+
+Saída do meu comando df:
+
+Sist. Arq.     Blocos de 1K     Usado Disponível Uso% Montado em
+tmpfs               1420132      2108    1418024   1% /run
+/dev/sda2         920762148 118329480  755586820  14% /
+tmpfs               7100640      4628    7096012   1% /dev/shm
+tmpfs                  5120        16       5104   1% /run/lock
+efivarfs                128        53         71  43% /sys/firmware/efi/efvars
+tmpfs               7100640         0    7100640   0% /run/qemu
+/dev/sda1           1098628     38272    1060356   4% /boot/efi
+tmpfs               1420128       156    1419972   1% /run/user/1000
+/dev/sdd1        2047982080 103128576 1944853504   6% /media/luca/5A3B-BFC3
+
+
+Uma breve descrição dos campos de saída do comando df:
+
+Sistema de Arquivo: O dispositivo de sistema de arquivo
+
+Blocos de 1K: A capacidade total do sistema de arquivo em blocos de 1024B
+
+Usado: O número de blocos ocupados
+
+Díponivel: O número de blocos livres 
+
+Uso: O percentual que está sendo usado
+
+Montado em: O ponto de montagem 
+
++ Checando e reparando sistemas de arquivo:
+
+A ferramenta usada para checar o sistema de arquivo é o fsck. 
+
+Exemplo:
+	fsck /dev/sda2
+
+Se o fsck achar algum problema ele para e pergunta ao usuário algo relevante para resolver o problema. Essas questões lidam com estruturas internas do sistema de arquivo como reconectar inodes perdidos ou limpar os blocos.
+
+Quando o fsck pergunta sobre reconectar inodes é porque foi encontrado um arquivo que tem nome. Quando faz a reconeção o fsck o arquivo é mandado para o diretorio lost+found e a identificação é feita pelo contéudo do arquivo. 
+Quando tem algum problema mais sério no sistema de arquivo pode rodar o fsck -p pois essa opção vai fazer com que para de perguntar sobre errors menores, mas toda vez que o linux está iniciando o próprio sistema roda um tipo de fsck -p.
+
+Se o fsck fizer várias perguntas é por que algo muito sério aconteceu no sistema. Caso tenha a impressão que tenha algum problema pode-se rodar o comando fsck -n pois dessa forma irá listar os problemas sem alterar nada.
+
+-------------------------------------------
+| Checando sistema de arquivo ext3 e ext4 |
+-------------------------------------------
+
+Caso queira checar ou reconstruir um sistema de arquivo quebrado pode rodar o comando:
+
+	e2fsck –fy /dev/disk_device
+
+---------------
+| O pior caso |
+---------------
+
+- Pode extrair a imagem do sistema de arquivo inteira e enviar para outra partição do mesmo tamanho 
+
+- Pode tentar corrigir o sistema de arquivo montando no modo somente leitura e salvar o que conseguir.
+
+- Pode usar uma ferramenta chamada debufs. Essa ferramenta permite olhar os
+arquivos de um sistema de arquivo e salvar eles em outro lugar. Ele por padrão abre os arquivos em modo somente leitura.
+
++ Sistema de arquivo de propósito específico
+
+Nem todos os sistemas de arquivo servem para guardar arquivos ou dispositivos fisícos de mídia. Alguns sistemas de arquivo servem como interfaces do sistema, como informações do sistema, ID de processos e diagnósticos do kernel.
+
+Os sistemas de arquivos especiais do Linux são:
+
+proc => Montado no /proc. A palavra proc é a abreviação de processos. Cada diretório numerado dentro do /proc é o ID do processo do sistema. Os arquivos dentro desse diretório representa várias faces dos processos. O arquivo /proc/self representa os processos atuais. O proc também contém informações da CPU no /proc/cpuinfo.
+
+sysfs => Montado no /sys. Mostra informações detalhadas sobre o hardware e sobre o kernel do sistema operacional.
+
+tmpfs => Montado no /run e em outros locais. Com o tmpfs, pode-se usar a memória fisíca e o espaço de swap como armazenamento temporário.
+
++ Espaço de SWAP
+
+É possível aumentar a RAM de uma máquina com o espaço do disco. Caso fique sem memória real, o sistema de memória virtual do Linux pode mover automaticamente pedaços de memória e de um armazenamento de disco. Esse processo é chamado de swapping por que programas ociosos são trocados para o disco em troca de pessas ativas e residentes do disco.
+
+Para usar toda a partição de um disco como swap, siga esses passos:
+
+1 - Verifique se a partição está vazia
+
+2 - Execute o comando mkswap dev, onde dev é a partição do disco. Esse comando coloca uma assinatura swap na partição
+
+3 - Execute swapon dev para registrar o spaço com o kernel
+
+Depois é só colocar a nova partição swap no /etc/fstab para que ela funcione a partir do boot.
+
+Caso seja necessário repaticionar o disco para criar um espaço para a swap pode-se simplismente usar um arquivo como espaço para a swap. Para fazer isso siga os seguintes comandos:
+
+	dd if=/dev/zero of=swap_file bs=1024k count=num_mb
+	mkswap swap_file
+	swapon swap_file
+
+swap_file é o nome do arquivo que vai ser usado como swap e num_mb é o tamanho desejado em megabytes.
+
+Para remover uma partição ou arquivo do ativamento de pool do kernel, usa-se o comando swapoff.
+
++ Dentro do tradicional sistema de arquivo 
+
+Um sistema de arquivo UNIX tradicional tem dois componentes primários:
+
+Um conjunto de blocos de dados onde se pode armazenar dados.
+
+Sistema de banco de dados que gerencia o conjunto de dados. O banco de dados é centrado ao redor da estrutura de dado inode. 
+
+Um inode é um conjunto de dados que descreve um arquivo em particular, incluindo o tipo, permissões e onde no conjunto de dados o arquivo reside. Inodes são identificados por números presentes na tabela de inodes. Nomes de arquivo e diretórios são implementados como inodes.
+
+Representação de nível de usuário do sistema de arquivo:
+
+		--------
+		| root |
+		--------
+		/	\
+	       /	 \
+	      /		  \
+	     /		   \
+	    /		    \
+	---------          ---------
+	| dir_1 |          | dir_2 |
+	---------          ---------
+            |                  |________
+	    |                           |   
+           /|\                         / \
+          / | \                       /   \
+         /  |  \                     /     \
+        /   |   \                   /       \
+       /    |    \                 /         \ 
+      /     |     \            --------     --------
+     /      |      \	       |file_4|     |file_4|
+ -------- -------- --------    --------     --------
+ |file_1| |file_2| |file_3|
+ -------- -------- --------
+
+
+Estrutura de sistema de arquivo do inode:
+
+	               		TABELA INODE
+
+ # / Quantidade de links / Tipo			Conjunto de dados 
+---------------------------------               ------------------- 
+|    2    |      4      |  dir  | ============>	| . inode 2	  |
+---------------------------------		| dir_1 inode 12  |
+						| dir_2 inode 7633|
+						-------------------
+
+---------------------------------		-------------------
+|    12   |       2     |  dir  | ============> | . inode 12	  |
+---------------------------------		| .. inode 2	  |
+						| file_1 inode 13 |
+                                                | file_2 inode 14 |
+                                                | file_3 inode 15 |
+						-------------------
+
+----------------------------------		-------------------
+|    13   |      1      |  file  | ===========> |       "a"       |
+----------------------------------		-------------------
+
+----------------------------------		-------------------
+|     14  |      1      |  file  | ===========> |        "b"      |
+----------------------------------		-------------------
+
+----------------------------------              -------------------
+|     15  |      2      |  file  | ===========> |        "c"      |
+----------------------------------              -------------------
+
+----------------------------------              -------------------
+|     16  |      1      |  file  | ===========> |        "d"      |
+----------------------------------              -------------------
+
+----------------------------------		-------------------
+|    7633 |       2     |  dir   | ===========> | . inode 7633    |
+----------------------------------		| .. inode 2      |
+						| file_4 inode 16 |
+						| file_5 inode 15 |
+						-------------------
+
+
+
+
+
+
+

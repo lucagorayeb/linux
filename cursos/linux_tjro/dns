@@ -1,0 +1,106 @@
+O que é DNS?
+
+- Domain Name Service. 
+- Serve para converter um FQDN (Full Qualified Domain Name) em um endereço
+  de IP, ou vice-versa.
+- Humanos não conseguem lembrar endereço IP! Por isso, usamos o DNS para
+  facilitar.
+
+Como acontece em casa?
+
+cliente ---------> Roteador ----------> DNS do ISP --------> ....
+   |
+   |
+   V
+Browser 
+
+O cliente manda uma requisição para o roteador dizendo que quer acessa um
+site e então o roteador manda para o servidor DNS do ISP e manda resolver
+o nome. O servidor DNS pode procurar em outros servidores. Depois que o 
+nome é resolvido a resposta vai retornando até chegar em quem a enviou.
+Depois que cliente recebe o IP ele joga no browser para achar a página web.
+
+Tipos de DNS
+
+- Recursive Resolver 
+	> Mantém em cache nomes já resolvidos
+	> Se não soube faz o foward para o próximo Roor Server.
+
+- Root Name Server
+	> É o ponto mais alto na cadeia de nameservers.
+	> Direciona para o TLD nameservers correspondente ao domínio
+	  requisitado.
+
+- TLD Name Server
+	> Mantém os domínios que compartilham extensões de domínio (com,br,
+	  us).
+	> Gerencia top-level: com, netn edu.
+	> Country code top-level: br, us, jp.
+
+- Authoritative Name Server
+	- O servidor que sabe exatamente dar a resposta de existe ou não
+	  o domínio.
+
+Busca DNS
+
+Cliente (O cliente manda para o resolver para saber se a resolução do nome
+|	 está no servidor da empresa.)
+|
++---> Resolver (O Resolver faz um forward para Root Name Server pedindo 
+  | | |	|	para resolver o nome do site informado.)
+  | | |	|
+  | | | +---> Root Name Server (O Root Name Server corta uma parte da url
+  | | |				de trás para frente, verifica como ela
+  | | |				termina e fala para o Resolver olhar em um 
+  | | |				local específico.) 
+  | | |
+  | | +---> TLD Contry Code (O TLD Country Code recebe a url sem o
+  | |			     identificador de país, pois o servidor que
+  | |			     está sendo perguntado foi definido com base
+  | |			     no identificador de país. Ele análisa a última
+  | |			     parte da url e fala para o Resolver procurar
+  | |			     no local indicado.)
+  | |
+  | |
+  | |
+  | +---> TLD Generic (O TLD Generic análisa a última parte da url e indica
+  |		       o local que o Resolver deve procurar e ele também
+  |		       não recebe a url com o TLD.)
+  |
+  |
+  +--->	Authoritative Name Server (O Authoritative Name Server resolve o
+				   nome restante da url e retorna o ip para
+				   o Resolver que retorna para cliente que 
+				   então pesquisa e encontra o site na web.)
+
+Como funciona em uma empresa?
+
+
+cliente ----> DNS caching-only ----> DNS Master ----> Firewall ---> Internet
+                     \                  |                ^
+                      \                 |                |
+		       \                V                |
+			+----------> DNS Slave ----------+
+
+O que são DNS Records?
+
+- A: Mapeia umnome para um IP.
+- CNAME: Mapeia um nome para outro nome.
+- MX: Mapeia para um Mail Server.
+- AAAA: Mesma coisa que o "A" só que para IPv6.
+- PTR: Converte IP no domínio (Inverso do "A").
+- NS: Nome do Name Server.
+- SOA: Start of Outhority, declara que será um Authoritative Server.
+
+O que são Zonas DNS?
+
+- É onde vai ser usado os DNS Records.
+- Uma zona é uma parte do endereço DNS.
+	Exemplo: 4fasters.com.br poderia ser uma zona onde poderia
+		 usar endereços como financeiro.4fasters.com.br ou 
+		 marketing.4fasters.com.br .
+- Cada parte do FQDN pode ser uma zona diferente.
+
+Parâmetros de configuração de Zonas?
+
+$ORIGIN - Define um domínio padrão que irá autocompletar em nomes sem domínio. Se não definido, será o nome da zona.

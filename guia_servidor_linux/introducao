@@ -1,0 +1,7 @@
++ Linux Kernel 
+
+O kernel possui dois modelos o monolítico e o microkernel.
+
+Microkernel => É o sistema operacional que possui apenas um núcleo que provê os recursos minímos necessários ao ambiente. 
+
+Monolítico => É o oposto do microkernel. Sua principal característica é permitir que funções como rede, vídeo e acesso a todos os preriféricos sejam possíveis do espaço do kernel espace. O linux utiliza o kernel monolítco.

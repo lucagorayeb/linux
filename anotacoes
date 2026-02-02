@@ -1,0 +1,15 @@
+Hierarquia de diretórios do linux
+
+/bin -> Esse diretório é onde se encontram os programas executaveis incluindo os comandos básicos como o ls e o cp. A maioria dos arquivos estão em binário pois foram gerados pelo compilador C e alguns estão em shell script.
+
+/dev -> Diretório onde ficam os dispositivos.
+
+/etc -> Diretório que armazena diversos diretórios e arquivos de configuração. Nele está armazenado os arquivos de senha do root, de interface de internet e do hardware da máquina.
+
+/home -> Diretório responsável pelos diretórios pessoais de um usuário comum 
+
+/lib -> Diretório onde ficam armazenadas as bibliotecas de arquivos executáveis e outras libs compartilhadas
+
+/proc -> Diretório que cotém informações sobre processos e paremetros do sistema
+
+

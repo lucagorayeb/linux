@@ -1,0 +1,74 @@
+O que é o NTP?
+
+- Network Time Protocol
+
+- Utilizado para sincronizar automaticamente o horário do sistema com algum servidor de horários
+
+- Garante que o horário sempre terá uma precisão alta relativo ao UTC(Coordinated Universal Time)
+ 
+----------------------------------------------------------------------------
+
+Por que usar NTP?
+
+- Serviços dependem do horário (back-ups, agendamento no Cron)
+
+- Clientes podem abrir requisições para o servidor, se estiver com horário dessincronizado, teremos uma diferença de informação.
+
+- Os logs do servidor estarão com horário diferente.
+
+----------------------------------------------------------------------------
+
+Arquitetura NTP - Errado 
+
+- Vários clientes abrindo requisições para o servidor é errado
+- Alto consumo de rede e dispersão de dados 
+						    ___________
+cliente-|					    | Servidor|
+        |            +----------+		    | Externo |
+cliente-|----------> | Internet | ----------------> | NTP     |
+	|	     +----------+		    |	      |
+cliente-|					    |_________|
+
+----------------------------------------------------------------------------
+
+Arquitetura NTP - Correto
+                                                               +---------+
+cliente-|       +---------+                                    | Servidor|  
+        |       | Servidor|    +----------+                    | Externo |
+cliente-|-----> | NTP     |--> | Internet | ---------------->  | NTP     |
+        |       | Interno |    +----------+                    |         |
+cliente-|       +---------+                                    |         |
+  							       +---------+
+----------------------------------------------------------------------------
+
+Como o NTP trabalha com o tempo do servidor, para checar se o tempo está de acordo com o desejado usa-se o comando:
+
+timedatectl -> Ele mostra o horário local, o horário universal e mostra se está sincronizado ou não.
+	       Para fazer alterações no horário pode-se usar o comando:
+			
+			 timedatectl set-timezone continete/cidade
+
+O NTP já vem ativado por padrão, mas pode ser desativado com o comando " timedatectl set-ntp off ", feito esse comando o tempo
+do sistema pode ser alterado para qualquer hora com o comando " timedatectl set-time horario_qualquer ".
+
+Para configurar o chrony precisa editar o arquivo /etc/chrony.conf
+
+Nesse arquivo podemos configurar as pool, são conjutos de servidores de NTP, ele vai tentar conectar nos servidores informados.
+
+O driftfile que está localizado em /var/lib/chrony/drift, ele guarda quanto tempo tem de distância entre o tempo atual do equipamento com o servidor.
+
+O arquivo makestep 1.0 3 se o equipamento e o servidor tiverem a diferença maior que 1 segundo, para sincronizar
+
+O rtcsync permite que o tempo do hardware seja sincronizado com o ntp
+
+Para permitir que todos os clientes consigam se conectar internamente no servidor ntp da rede, primeiro precisa descomentar a linha que permite a coneção
+dos clientes e depoi inserir o ip da rede com o final zero (X.X.X.0/X).
+
+Todo vez que o NTP é reiniciado ele troca de porta, para definir uma porta para o serviço, é só colocar o comando " acquisitionport numero_porta ".
+Isso é feito para caso seja criado uma regra de firewall quer permita conexão UDP na porta 123 e o NTP seja reiniciado e troque de porta vai ter que
+liberar mais uma porta no firewall.
+
+Podemos rodar comando e ver se ele está conseguindo sincronizar, como:
+
+- chronyc tracking
+- chronyc sources -v 
