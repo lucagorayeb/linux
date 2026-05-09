@@ -1,0 +1,276 @@
+TRILHA PRÁTICA LINUX - EXERCÍCIOS COM MAN PAGES
+Método:
+1. Tente resolver sozinho
+2. Se travar, abra o manual com man <comando>
+3. Leia só o necessário
+4. Teste novamente
+
+==================================================
+FASE 1 - FUNDAMENTOS DO TERMINAL
+==================================================
+
+EXERCÍCIO 1 - ORGANIZAR DIRETÓRIOS - FEITO
+
+Objetivo:
+Aprender navegação e manipulação de arquivos.
+
+Tarefa:
+1. Crie a pasta laboratorio
+2. Dentro dela crie:
+   - docs
+   - scripts
+   - backup
+3. Crie 3 arquivos .txt dentro de docs
+4. Mova 1 arquivo para backup
+
+Leia se travar:
+man mkdir
+man touch
+man mv
+man ls
+man pwd
+
+--------------------------------------------------
+
+EXERCÍCIO 2 - CÓPIA E REMOÇÃO SEGURA  - FEITO
+
+Objetivo:
+Aprender copiar e apagar arquivos.
+
+Tarefa:
+1. Copie todos arquivos de docs para backup
+2. Apague apenas 1 arquivo específico
+3. Liste o conteúdo final
+
+Leia se travar:
+man cp
+man rm
+man ls
+
+--------------------------------------------------
+
+EXERCÍCIO 3 - ENCONTRAR ARQUIVOS  - FEITO
+
+Objetivo:
+Aprender busca no sistema.
+
+Tarefa:
+1. Crie 10 arquivos variados
+2. Encontre apenas arquivos .txt
+3. Encontre arquivos criados hoje
+
+Leia se travar:
+man find
+man ls
+
+==================================================
+FASE 2 - TEXTO E LOGS
+==================================================
+
+EXERCÍCIO 4 - FILTRAR INFORMAÇÕES  - FEITO
+
+Objetivo:
+Aprender análise de logs.
+
+Tarefa:
+Crie arquivo app.log com conteúdo:
+
+INFO login ok
+ERROR banco caiu
+INFO logout
+ERROR timeout
+
+Depois:
+1. Mostrar só linhas ERROR
+2. Contar quantas linhas ERROR existem
+
+Leia se travar:
+man grep
+man wc
+man cat
+
+--------------------------------------------------
+
+EXERCÍCIO 5 - EDITAR TEXTO - FEITO
+
+Objetivo:
+Substituir texto rapidamente.
+
+Tarefa:
+Troque todas ocorrências de ERROR por FALHA no arquivo app.log
+
+Leia se travar:
+man sed
+
+==================================================
+FASE 3 - PROCESSOS
+==================================================
+
+EXERCÍCIO 6 - INVESTIGAR PROCESSOS - FEITO
+
+Objetivo:
+Entender processos ativos.
+
+Tarefa:
+1. Veja processos rodando
+2. Descubra o shell atual
+3. Veja processos que mais usam CPU
+
+Leia se travar:
+man ps
+man top
+
+--------------------------------------------------
+
+EXERCÍCIO 7 - CRIAR E MATAR PROCESSO - FEITO
+
+Objetivo:
+Controlar processos.
+
+Tarefa:
+1. Rode um processo que fique esperando
+2. Descubra PID
+3. Finalize corretamente
+
+Leia se travar:
+man sleep
+man kill
+man ps
+
+==================================================
+FASE 4 - PERMISSÕES
+==================================================
+
+EXERCÍCIO 8 - ARQUIVO BLOQUEADO - FEITO
+
+Objetivo:
+Entender permissões.
+
+Tarefa:
+1. Crie segredo.txt
+2. Remova permissão de leitura
+3. Tente abrir
+4. Corrija
+
+Leia se travar:
+man chmod
+man ls
+
+--------------------------------------------------
+
+EXERCÍCIO 9 - DONO DO ARQUIVO - FEITO
+
+Objetivo:
+Entender ownership.
+
+Tarefa:
+1. Descubra dono e grupo de vários arquivos
+2. Se puder, altere proprietário de um arquivo de teste
+
+Leia se travar:
+man chown
+man ls
+
+==================================================
+FASE 5 - REDE
+==================================================
+
+EXERCÍCIO 10 - TESTAR CONECTIVIDADE - FEITO
+
+Objetivo:
+Networking básico.
+
+Tarefa:
+1. Teste conexão com um site
+2. Descubra IP local
+3. Veja portas abertas
+
+Leia se travar:
+man ping
+man ip
+man ss
+
+--------------------------------------------------
+
+EXERCÍCIO 11 - HTTP NO TERMINAL - FEITO
+
+Objetivo:
+Testar requisições web.
+
+Tarefa:
+Baixe cabeçalhos de uma página web
+
+Leia se travar:
+man curl
+
+==================================================
+FASE 6 - SISTEMA
+==================================================
+
+EXERCÍCIO 12 - ESPAÇO EM DISCO - FEITO 
+
+Objetivo:
+Investigar armazenamento.
+
+Tarefa:
+1. Ver uso total do disco
+2. Descobrir pasta maior no diretório atual
+
+Leia se travar:
+man df
+man du
+
+--------------------------------------------------
+
+EXERCÍCIO 13 - LOGS DO SISTEMA
+
+Objetivo:
+Diagnosticar erros reais.
+
+Tarefa:
+Veja logs recentes do sistema
+
+Leia se travar:
+man journalctl
+
+==================================================
+FASE 7 - AVANÇANDO
+==================================================
+
+EXERCÍCIO 14 - ARQUIVO EM USO
+
+Objetivo:
+Descobrir quem está usando arquivos.
+
+Tarefa:
+Descubra processos usando um arquivo aberto
+
+Leia se travar:
+man lsof
+
+--------------------------------------------------
+
+EXERCÍCIO 15 - CHAMADAS DO SISTEMA
+
+Objetivo:
+Entender comportamento de programas.
+
+Tarefa:
+Observe o que acontece ao executar ls
+
+Leia se travar:
+man strace
+
+
+==================================================
+REGRA PRINCIPAL
+==================================================
+
+Não procure resposta pronta.
+Use:
+- man
+- tentativa e erro
+- observação
+- raciocínio
+
+Isso forma especialista.

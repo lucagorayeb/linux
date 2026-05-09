@@ -1,0 +1,28 @@
+Váriaveis do shell
+
+ Declarando uma váriavel no shell:
+    NOME=Luca ou NOME="Luca" ou NOME='Luca'
+
+    É possível passar comandos do shell para uma váriavel, basta usar $()
+    DATE=$(date)
+
+    Para fazer que apenas um caracter seja encarado como literal usa-se \
+        echo \$HOME
+    Mas támbem pode ser usado aspas simples, mas elas insterpretam toda
+    a sentença como literal.
+        echo '$HOME'
+
+Váriaveis Especiais:
+
+    O shell tem algumas variaveis especiais que são chamadas de parametros
+    posicionais ou argumentos de linha de comando. São elas $0 - $9. $0 é a chamada
+    do comando ou do script os outros são colocados na sequência.
+
+    $# - A quantidade de argumentos que foram passados.
+
+    $@ - Guarda todos os argumentos paassados na linha da comando.
+
+    $? - Armazena o status de saída de um comando executado. (0 é bom)
+
+    Existem várias outros, o ideal é consultar o manual da bash man page.
+

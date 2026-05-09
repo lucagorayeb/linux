@@ -1,0 +1,331 @@
+TRILHA PRÁTICA LINUX - NÍVEL 2
+DESAFIOS REAIS (INTERMEDIÁRIO / PROFISSIONAL)
+
+Método:
+1. Resolva sozinho
+2. Se travar: use man pages
+3. Investigue logs
+4. Teste hipóteses
+5. Só depois pesquise
+
+==================================================
+FASE 1 - ARQUIVOS E BUSCA REAL
+==================================================
+
+EXERCÍCIO 1 - LIMPEZA DE LOGS GIGANTES - FEITO
+
+Objetivo:
+Trabalhar com arquivos grandes.
+
+Tarefa:
+1. Crie um arquivo log com milhares de linhas
+2. Misture INFO, WARN e ERROR
+3. Extraia somente ERROR
+4. Conte quantos ERROR existem
+5. Salve resultado em outro arquivo
+
+Leia se travar:
+man seq
+man echo
+man grep
+man wc
+man >
+
+--------------------------------------------------
+
+EXERCÍCIO 2 - BACKUP INTELIGENTE - FEITO
+
+Objetivo:
+Copiar preservando estrutura.
+
+Tarefa:
+1. Crie árvore com pastas e arquivos
+2. Faça backup completo
+3. Modifique 2 arquivos
+4. Faça backup somente do que mudou
+
+Leia se travar:
+man cp
+man rsync
+
+==================================================
+FASE 2 - PROCESSOS E PERFORMANCE
+==================================================
+
+EXERCÍCIO 3 - CPU EM 100% - FEITO
+
+Objetivo:
+Diagnosticar consumo excessivo.
+
+Tarefa:
+1. Gere processo consumindo CPU
+2. Descubra qual PID está causando problema
+3. Reduza prioridade
+4. Finalize corretamente
+
+Leia se travar:
+man yes
+man top
+man ps
+man nice
+man renice
+man kill
+
+--------------------------------------------------
+
+EXERCÍCIO 4 - MEMÓRIA ALTA - FEITO
+
+Objetivo:
+Investigar uso de RAM.
+
+Tarefa:
+1. Descubra uso atual de memória
+2. Veja processos que mais consomem RAM
+3. Mate o pior processo
+
+Leia se travar:
+man free
+man ps
+man top
+man kill
+
+==================================================
+FASE 3 - PERMISSÕES REAIS
+==================================================
+
+EXERCÍCIO 5 - PASTA COMPARTILHADA - FEITO
+
+Objetivo:
+Permissões multiusuário.
+
+Tarefa:
+1. Crie pasta projeto
+2. Faça somente dono e grupo acessarem
+3. Outros usuários não podem entrar
+4. Novos arquivos devem herdar grupo
+
+Leia se travar:
+man chmod
+man chown
+man chgrp
+man umask
+
+--------------------------------------------------
+
+EXERCÍCIO 6 - SCRIPT SEM EXECUÇÃO - FEITO
+
+Objetivo:
+Resolver erro clássico.
+
+Tarefa:
+1. Crie script teste.sh
+2. Faça script não executar
+3. Corrija problema
+4. Rode script
+
+Leia se travar:
+man chmod
+man bash
+
+==================================================
+FASE 4 - REDE REAL
+==================================================
+
+EXERCÍCIO 7 - PORTA OCUPADA 
+
+Objetivo:
+Descobrir quem usa porta.
+
+Tarefa:
+1. Rode serviço simples em porta qualquer
+2. Descubra processo usando a porta
+3. Mate processo
+4. Libere porta
+
+Leia se travar:
+man python3
+man ss
+man lsof
+man kill
+
+--------------------------------------------------
+
+EXERCÍCIO 8 - TESTE HTTP PROFISSIONAL
+
+Objetivo:
+Diagnosticar serviços web.
+
+Tarefa:
+1. Suba servidor HTTP local
+2. Teste resposta
+3. Veja headers HTTP
+4. Faça request para página inexistente
+
+Leia se travar:
+man python3
+man curl
+
+==================================================
+FASE 5 - DISCO E SISTEMA
+==================================================
+
+EXERCÍCIO 9 - DESCOBRIR O VILÃO DO DISCO
+
+Objetivo:
+Achar consumo oculto.
+
+Tarefa:
+1. Crie arquivos grandes em locais diferentes
+2. Descubra qual pasta mais consome
+3. Descubra maior arquivo
+4. Limpe espaço
+
+Leia se travar:
+man du
+man df
+man find
+
+--------------------------------------------------
+
+EXERCÍCIO 10 - ARQUIVO APAGADO MAS ESPAÇO NÃO VOLTA
+
+Objetivo:
+Problema real de produção.
+
+Tarefa:
+1. Abra arquivo grande em processo
+2. Apague arquivo
+3. Veja que espaço não voltou
+4. Descubra quem segura arquivo aberto
+
+Leia se travar:
+man lsof
+man rm
+man df
+
+==================================================
+FASE 6 - LOGS E SERVIÇOS
+==================================================
+
+EXERCÍCIO 11 - SERVIÇO FALHANDO
+
+Objetivo:
+Investigar falhas reais.
+
+Tarefa:
+1. Crie serviço ou comando que falha
+2. Tente iniciar
+3. Leia logs
+4. Corrija erro
+
+Leia se travar:
+man systemctl
+man journalctl
+man systemd
+
+--------------------------------------------------
+
+EXERCÍCIO 12 - LOG FORENSE
+
+Objetivo:
+Encontrar erro em milhares de linhas.
+
+Tarefa:
+1. Gere log grande
+2. Misture mensagens normais e falhas
+3. Descubra hora do primeiro erro
+4. Descubra última falha
+
+Leia se travar:
+man grep
+man head
+man tail
+man sort
+
+==================================================
+FASE 7 - DEBUGGING PROFISSIONAL
+==================================================
+
+EXERCÍCIO 13 - O QUE O PROGRAMA ESTÁ FAZENDO?
+
+Objetivo:
+Inspecionar chamadas de sistema.
+
+Tarefa:
+1. Observe execução do ls
+2. Observe execução do cat
+3. Descubra quais arquivos eles acessam
+
+Leia se travar:
+man strace
+
+--------------------------------------------------
+
+EXERCÍCIO 14 - QUEM ESTÁ USANDO ESSE ARQUIVO?
+
+Objetivo:
+Investigar bloqueios.
+
+Tarefa:
+1. Abra arquivo em outro terminal
+2. Descubra processo que está usando
+3. Finalize processo
+
+Leia se travar:
+man lsof
+man ps
+man kill
+
+==================================================
+FASE 8 - DOCKER + LINUX
+==================================================
+
+EXERCÍCIO 15 - CONTAINER NÃO RESPONDE
+
+Objetivo:
+Diagnóstico moderno.
+
+Tarefa:
+1. Suba container web
+2. Faça erro no mapeamento de porta
+3. Descubra por que navegador não abre
+4. Corrija
+
+Leia se travar:
+docker ps
+docker logs
+docker inspect
+man ss
+
+--------------------------------------------------
+
+EXERCÍCIO 16 - VOLUME NÃO SALVA
+
+Objetivo:
+Persistência.
+
+Tarefa:
+1. Crie container com arquivo interno
+2. Remova container
+3. Veja arquivo sumir
+4. Corrija usando volume
+
+Leia se travar:
+docker volume ls
+docker run --help
+
+==================================================
+REGRA DE OURO
+==================================================
+
+Antes de pedir ajuda, use:
+
+man <comando>
+--help
+logs
+ps
+ss
+lsof
+journalctl
+
+Quem domina investigação domina Linux.
